@@ -15,7 +15,8 @@ SSE4 = ((y-y_avg)**2).sum() """ #Duas maneiras extras de computar o SSE e o SSE2
 print()
 print("O r^2 é ", 1 - (SSE/SSE2)[0,0])
 
-
+y_predicted = x @ Betas
+print("Os valores preditos são:\n", y_predicted)
 
 """ df = pd.DataFrame()
 df['X'] = x[:, 0]
