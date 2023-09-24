@@ -24,52 +24,75 @@ print("O r^2 é ", 1 - (SSE/SSE2)[0, 0]) """
 x_train = x
 y_train = y
 total = np.zeros(2)
-kf = KFold(n_splits=3, shuffle=True)  # Para o cross Validation
-
-#Linear
-reg = linear_model.LinearRegression()
-for idx_train, idx_teste in kf.split(x_train):
-    reg.fit(x_train[idx_train], y_train[idx_train])
-    y_prever = reg.predict(x_train[idx_teste])
-    r2 = r2_score(y_true=y_train[idx_teste], y_pred=y_prever)
-    total[0] += r2
-"""     print(f"O r^2 do linear é {r2:.4f}") """
-print(f"A média é {total[0]/kf.get_n_splits():.4f} para o Linear \n")
-
-#Ridge
-total[0] = 0
-for i in np.arange(0.1, 1.1, 0.1):
-    ridge = linear_model.Ridge(alpha=i)
+alpha = np.zeros([2,10])
+kf = KFold(n_splits=5, shuffle=True)  # Para o cross Validation
+for j in range(0,10):
+    """ # Linear
+    print(f"-------Teste nº {j+1}--------\n\n")
+    reg = linear_model.LinearRegression()
     for idx_train, idx_teste in kf.split(x_train):
-        ridge.fit(x_train[idx_train], y_train[idx_train])
-        y_prever = ridge.predict(x_train[idx_teste])
+        reg.fit(x_train[idx_train], y_train[idx_train])
+        y_prever = reg.predict(x_train[idx_teste])
         r2 = r2_score(y_true=y_train[idx_teste], y_pred=y_prever)
-        if(total[0] < r2):
+        total[0] += r2"""     
+    """ print(f"O r^2 do linear é {r2:.4f}")
+    print(f"A média é {total[0]/kf.get_n_splits():.4f} para o Linear \n") """
+
+    # Ridge
+    total[0] = -1000
+    for i in np.arange(0.1, 1.1, 0.1):
+        r2 = 0
+        ridge = linear_model.Ridge(alpha=i)
+        for idx_train, idx_teste in kf.split(x_train):
+            ridge.fit(x_train[idx_train], y_train[idx_train])
+            y_prever = ridge.predict(x_train[idx_teste])
+            r2 += r2_score(y_true=y_train[idx_teste], y_pred=y_prever)
+        if (total[0] < r2):
             total[0] = r2
             total[1] = i
-        """ total[1] += r2
-    print(f"A média é {total[1]/kf.get_n_splits():.4f} para o Ridge com alpha = {i}\n")
-    total[1] = 0 """
-print(f"O melhor para o Ridge foi {total[0]:.4f} com alpha = {total[1]}\n")
+            
+    print(f"A média do melhor para o Ridge foi {total[0]/kf.get_n_splits():.4f} com alpha = {total[1]}\n")
+    alpha[0,round(total[1]*10-1)]+=1
 
-#Lasso 
-total = np.zeros(2)
-for i in np.arange(0.1, 1.1, 0.1):
-    lasso = linear_model.Lasso(alpha=i)
-    for idx_train, idx_teste in kf.split(x_train):
-        lasso.fit(x_train[idx_train], y_train[idx_train])
-        y_prever = lasso.predict(x_train[idx_teste])
-        r2 = r2_score(y_true=y_train[idx_teste], y_pred=y_prever)
-        if(total[0] < r2):
+    # Lasso
+    total = np.zeros(2)
+    total[0] = -1000
+    for i in np.arange(0.1, 1.1, 0.1):
+        r2 = 0
+        lasso = linear_model.Lasso(alpha=i)
+        for idx_train, idx_teste in kf.split(x_train):
+            lasso.fit(x_train[idx_train], y_train[idx_train])
+            y_prever = lasso.predict(x_train[idx_teste])
+            r2 += r2_score(y_true=y_train[idx_teste], y_pred=y_prever)
+        if (total[0] < r2):
             total[0] = r2
             total[1] = i
-        """ total[1] += r2
-    print(f"A média é {total[1]/kf.get_n_splits():.4f} para o Lasso com alpha = {i}\n")
-    total[1] = 0 """
-        
-print(f"O melhor para o Lasso foi {total[0]:.4f} com alpha = {total[1]}\n")
+    alpha[1,round(total[1]*10-1)]+=1
+    print(f"A média do melhor para o Lasso foi {total[0]/kf.get_n_splits():.4f} com alpha = {total[1]}\n")
+
+    total = np.zeros(2)
+    total[0] = -1000
+    for i in np.arange(0.1, 1.1, 0.1):
+        r2 = 0
+        net = linear_model.ElasticNet(alpha=i)
+        for idx_train, idx_teste in kf.split(x_train):
+            net.fit(x_train[idx_train], y_train[idx_train])
+            y_prever = net.predict(x_train[idx_teste])
+            r2 += r2_score(y_true=y_train[idx_teste], y_pred=y_prever)
+        if (total[0] < r2):
+            total[0] = r2
+            total[1] = i
+    print(f"A média do melhor para o elastic foi {total[0]/kf.get_n_splits():.4f} com alpha = {total[1]}\n") 
+
 
 
 """ y_prever = reg.predict(x_teste)
 r2 = r2_score(y_true=y_teste, y_pred=y_prever)
 print(f"O r^2 final é {r2:.4f}") """
+
+
+print("Para o ridge", alpha[0,:].argmax()+1)
+print("Para o lasso", alpha[1,:].argmax()+1)
+print(alpha[0])
+print(alpha[1])
+
