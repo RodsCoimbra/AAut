@@ -8,11 +8,12 @@ from sklearn.model_selection import KFold, train_test_split
 # Método linear
 x = np.load("Projeto1/X_train_regression1.npy")
 y = np.load("Projeto1/y_train_regression1.npy")
-x1 = np.append(np.ones((x.shape[0], 1)), x, axis=1)
+""" x1 = np.append(np.ones((x.shape[0], 1)), x, axis=1)
 Betas = (np.linalg.inv(x1.T @ x1) @ x1.T) @ y
-""" print("Os valores dos Betas são:\n", Betas.T) """
+np.save("Projeto1/Betas.npy", Betas)
+print("Os valores dos Betas são:\n", Betas.T)
 SSE = np.linalg.norm(y-x1@Betas)**2
-SSE2 = (y - y.mean()).T @ (y - y.mean())
+SSE2 = (y - y.mean()).T @ (y - y.mean()) """
 """ SSE3 = (y - x @ Betas).T @ (y - x @ Betas)
 SSE4 = ((y-y_avg)**2).sum() """  # Duas maneiras extras de computar o SSE e o SSE2, não sei qual a mais rápida
 """ print()
@@ -21,8 +22,9 @@ print("O r^2 é ", 1 - (SSE/SSE2)[0, 0]) """
 
 # Scikit-learn Método Linear
 """ x_train, x_teste, y_train, y_teste = train_test_split(x, y, shuffle=True, test_size=4) """
-x_train = x
-y_train = y
+x_train = np.delete(x, 9, 0)
+y_train = np.delete(y, 9, 0)
+y = np.delete(y, 9, 0)
 total = np.zeros(2)
 alpha = np.zeros([2,10])
 kf = KFold(n_splits=5, shuffle=True)  # Para o cross Validation
