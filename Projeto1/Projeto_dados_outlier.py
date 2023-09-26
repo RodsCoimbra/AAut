@@ -34,4 +34,5 @@ x = np.load("Projeto1/X_train_regression1.npy")
 y = np.load("Projeto1/y_train_regression1.npy")
 for idx, idx_teste in kf.split(x):
     y_prever = reg.predict(x[idx_teste])
-    print(f"O r^2 do linear é {y_prever-y[idx_teste]} para o teste {idx_teste}")
+    print(
+        f"O r^2 do linear é {y_prever-y[idx_teste]} para o teste {idx_teste}")
