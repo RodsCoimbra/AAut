@@ -1,25 +1,22 @@
-from mpl_toolkits import mplot3d
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn import linear_model
-from sklearn.metrics import r2_score
-from sklearn.model_selection import KFold, train_test_split
+from sklearn.model_selection import KFold
 from sys import exit
 x = np.load("Projeto1/X_train_regression1.npy")
 y = np.load("Projeto1/y_train_regression1.npy")
 rand = np.random.randint(0, 100000)
 # Para o cross Validation
-kf = KFold(n_splits=5, shuffle=True, random_state=rand)
+kf = KFold(n_splits=15, shuffle=True, random_state=rand)
 SSE_Ridge = 0
 SSE_Linear = 0
 SSE_Lasso = 0
 
 # Variáveis a definir
-step = 0.05
+step = 0.01
 # step = 0.0001
-max_lasso = 3
-max_ridge = 10
+max_lasso = 0.5
+max_ridge = 3
 prints = False
 Load_dados = False
 save_dados = False
@@ -88,7 +85,7 @@ plt.legend(["Ridge", "Lasso"])
 plt.show()
 
 
-# ElasticNet
+""" # ElasticNet
 i = 0
 SSE_mean = np.array([[]])
 alphas = np.array([[]])
@@ -101,7 +98,8 @@ if (Load_dados == False):
             for idx_train, idx_teste in kf.split(x):
                 ElasticNet.fit(x[idx_train], y[idx_train])
                 y_prever3 = ElasticNet.predict(x[idx_teste])
-                SSE = np.linalg.norm(y[idx_teste]-y_prever3)**2/(idx_teste.size)
+                SSE = np.linalg.norm(
+                    y[idx_teste]-y_prever3)**2/(idx_teste.size)
                 SSE_ElasticNet += SSE
             if (prints == True):
                 print("\nMédia ElasticNet: ", SSE_ElasticNet/kf.get_n_splits())
@@ -134,7 +132,7 @@ print("Valor de SSE mais baixo do ElasticNet:", SSE_mean.min())
 print("Para este valor de alpha:",
       alphas[SSE_mean.argmin()], "e l1_ratio:", l1_ratio[SSE_mean.argmin()])
 print()
-plt.show()
+plt.show() """
 
 # Linear
 reg = linear_model.LinearRegression()
