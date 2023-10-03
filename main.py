@@ -90,7 +90,8 @@ for Valor in np.arange(0.575, 0.588, 0.0005):
         SSE_Min = [Final, Valor]
     print("\nPara o valor de ", Valor,
           " a norma da média dos dois SSE é: ", Final)
-    print(f"Referência: {SSE_Linear1:.4f}\t {SSE_Linear2:.4f} \nNumero de pontos 1: {Indx[0]} \t Numero de pontos 2: {save2.shape[0]}")
+    print(
+        f"Referência: {SSE_Linear1:.4f}\t {SSE_Linear2:.4f} \nNumero de pontos 1: {Indx[0]} \t Numero de pontos 2: {save2.shape[0]}")
 print("\n\n\nO final de todos foi: ",
       SSE_Min[0], " para o valor de ", SSE_Min[1])
 plt.plot(Graficox, Graficoy)

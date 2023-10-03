@@ -8,18 +8,13 @@ from sklearn.model_selection import KFold
 
 x = np.load("Projeto1_Parte2/Dados/X_train_regression2.npy")
 y = np.load("Projeto1_Parte2/Dados/y_train_regression2.npy")
-""" x = np.load("x2.npy")
-y = np.load("y2.npy") """
 
 scalerx = StandardScaler().fit(x)
 x = scalerx.transform(x)
 scalery = StandardScaler().fit(y)
 y = scalery.transform(y)
-Valor = 0.58
+Valor = 0.585
 Lin = LinearRegression()
-SSE_Min = np.full([2], 10000000000)
-Graficox = []
-Graficoy = []
 Indx = np.zeros(3)
 Max = 0
 Min = np.zeros(y.ravel().size)
