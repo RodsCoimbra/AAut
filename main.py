@@ -1,14 +1,13 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
-import array
 from sklearn.preprocessing import StandardScaler
 
 
-""" x = np.load("Proj1_Parte2/Dados/X_train_regression2.npy")
-y = np.load("Proj1_Parte2/Dados/y_train_regression2.npy") """
-x = np.load("x2.npy")
-y = np.load("y2.npy")
+x = np.load("Projeto1_Parte2/Dados/X_train_regression2.npy")
+y = np.load("Projeto1_Parte2/Dados/y_train_regression2.npy")
+""" x = np.load("x2.npy")
+y = np.load("y2.npy") """
 
 scalerx = StandardScaler().fit(x)
 x = scalerx.transform(x)
@@ -46,14 +45,18 @@ for idx, [y_prev, y_real] in enumerate(zip(y_previsto, y)):
         save2 = np.append(save2, x[idx])
         savey2 = np.append(savey2, y_real)
     Min[idx] = abs(y_prev - y_real)
-
-""" save = save.reshape(round(save.shape[0]/4), 4)
+save = save.reshape(round(save.shape[0]/4), 4)
 save2 = save2.reshape(round(save2.shape[0]/4), 4)
 savey = savey.reshape(-1, 1)
 savey2 = savey2.reshape(-1, 1)
-np.save("x1.npy", save)
-np.save("x2.npy", save2)
-np.save("y1.npy", savey)
-np.save("y2.npy", savey2) """
+save = scalerx.inverse_transform(save)
+savey = scalery.inverse_transform(savey)
+save2 = scalerx.inverse_transform(save2)
+savey2 = scalery.inverse_transform(savey2)
+
+np.save("Projeto1_Parte2/Dados/X_train_alpha_regression2.npy", save)
+np.save("Projeto1_Parte2/Dados/X2_train_alpha_regression2.npy", save2)
+np.save("Projeto1_Parte2/Dados/y_train_alpha_regression2.npy", savey)
+np.save("Projeto1_Parte2/Dados/y2_train_alpha_regression2.npy", savey2)
 plt.scatter(np.arange(0, y.ravel().size), Min)
 plt.show()
