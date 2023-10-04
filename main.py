@@ -4,12 +4,10 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn import linear_model
 from sklearn.model_selection import KFold
-
+from sys import exit
 
 x = np.load("Projeto1_Parte2/Dados/X_train_regression2.npy")
 y = np.load("Projeto1_Parte2/Dados/y_train_regression2.npy")
-""" x = np.load("x2.npy")
-y = np.load("y2.npy") """
 
 scalerx = StandardScaler().fit(x)
 x = scalerx.transform(x)
@@ -20,7 +18,7 @@ Lin = LinearRegression()
 SSE_Min = np.full([2], 10000000000)
 Graficox = []
 Graficoy = []
-for Valor in np.arange(0.575, 0.588, 0.0005):
+for Valor in np.arange(0.4, 0.9, 0.01):
     Indx = np.zeros(3)
     Max = 0
     Min = np.zeros(y.ravel().size)
@@ -63,35 +61,32 @@ for Valor in np.arange(0.575, 0.588, 0.0005):
     save2 = scalerx.inverse_transform(save2)
     savey2 = scalery.inverse_transform(savey2)
     # Linear
-    reg = linear_model.LinearRegression()
-    SSE_Linear1 = 0
-    SSE_Linear2 = 0
-    for a in range(0, 5):
+    reg1 = linear_model.LinearRegression()
+    reg2 = linear_model.LinearRegression()
+    SSE_final = 0
+    media = 5
+    for a in range(0, media):
         rand = np.random.randint(0, 100000)
         # Para o cross Validation
         kf = KFold(n_splits=10, shuffle=True, random_state=rand)
-        for idx_train, idx_teste in kf.split(save):
-            reg.fit(save[idx_train], savey[idx_train])
-            y_prever1 = reg.predict(save[idx_teste])
-            SSE_Linear1 += np.linalg.norm(savey[idx_teste] -
-                                          y_prever1)**2
-        for idx_train, idx_teste in kf.split(save2):
-            reg.fit(save2[idx_train], savey2[idx_train])
-            y_prever1 = reg.predict(save2[idx_teste])
-            SSE_Linear2 += np.linalg.norm(savey2[idx_teste] -
-                                          y_prever1)**2
-    SSE_Linear1 = SSE_Linear1/5
-    SSE_Linear2 = SSE_Linear2/5
-    Final = np.linalg.norm(
-        [SSE_Linear1/kf.get_n_splits(), SSE_Linear2/kf.get_n_splits()])
+        for [(idx_train, idx_teste), (idx_train2, idx_teste2)] in zip(kf.split(save), kf.split(save2)):
+            reg1.fit(save[idx_train], savey[idx_train])
+            y_prever1 = reg1.predict(x)
+            reg2.fit(save2[idx_train2], savey2[idx_train2])
+            y_prever2 = reg2.predict(x)
+            SSE = np.where((y - y_prever1)**2 > (y-y_prever2)**2,
+                           (y-y_prever2)**2, (y - y_prever1)**2)  # Guardar o melhor SE para cada ponto
+            SSE_final += np.sum(SSE)
+
+    SSE_final = SSE_final/(media*kf.get_n_splits())
     Graficox = np.append(Graficox, Valor)
-    Graficoy = np.append(Graficoy, Final)
-    if (SSE_Min[0] > Final):
-        SSE_Min = [Final, Valor]
+    Graficoy = np.append(Graficoy, SSE_final)
+    if (SSE_Min[0] > SSE_final):
+        SSE_Min = [SSE_final, Valor]
     print("\nPara o valor de ", Valor,
-          " a norma da média dos dois SSE é: ", Final)
+          " o SSE é: ", SSE_final)
     print(
-        f"Referência: {SSE_Linear1:.4f}\t {SSE_Linear2:.4f} \nNumero de pontos 1: {Indx[0]} \t Numero de pontos 2: {save2.shape[0]}")
+        f"Referência: Numero de pontos 1 = {Indx[0]} \t Numero de pontos 2 = {save2.shape[0]}")
 print("\n\n\nO final de todos foi: ",
       SSE_Min[0], " para o valor de ", SSE_Min[1])
 plt.plot(Graficox, Graficoy)
