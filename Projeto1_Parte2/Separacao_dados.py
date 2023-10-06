@@ -13,7 +13,7 @@ scalerx = StandardScaler().fit(x)
 x = scalerx.transform(x)
 scalery = StandardScaler().fit(y)
 y = scalery.transform(y)
-Valor = 0.585
+Valor = 0.375
 Lin = LinearRegression()
 Indx = np.zeros(3)
 Max = 0
@@ -51,8 +51,9 @@ save = scalerx.inverse_transform(save)
 savey = scalery.inverse_transform(savey)
 save2 = scalerx.inverse_transform(save2)
 savey2 = scalery.inverse_transform(savey2)
-
+""" 
 np.save("Projeto1_Parte2/Dados/X_train_alpha_regression2.npy", save)
 np.save("Projeto1_Parte2/Dados/X2_train_alpha_regression2.npy", save2)
 np.save("Projeto1_Parte2/Dados/y_train_alpha_regression2.npy", savey)
 np.save("Projeto1_Parte2/Dados/y2_train_alpha_regression2.npy", savey2)
+ """
