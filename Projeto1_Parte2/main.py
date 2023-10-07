@@ -48,14 +48,14 @@ if __name__ == '__main__':
     x_scaler = scalerx.transform(x)
     scalery = StandardScaler().fit(y)
     y_scaler = scalery.transform(y)
-
     SSE_Min = np.full([2], 10000000000)
     Graficox = []
     Graficoy = []
-    for Valor in np.arange(0.395, 1, 2):
+    for Valor in np.arange(0.01, 5, 2):
         Indx = RANSAC(x_scaler, y_scaler, Valor)
-        # Caso em que não há inliers
-        if (Indx[0, 0] == 0):
+        # Caso em que um deles tem menos que 10 pontos, logo não é possível fazer 10 folds
+        if (Indx[0, 0] < 10 or Indx[0, 0] > 90):
+            print(Valor, " não tem 10 pontos em cada reta")
             continue
         # Separação dados
         Best_Line = np.full([4, 1], 100000000)
@@ -75,11 +75,6 @@ if __name__ == '__main__':
                 else:
                     dados2 = np.append(dados2, x_scaler[idx])
                     dadosy2 = np.append(dadosy2, y_real)
-            # Um deles tem menos que 10 pontos, logo não é possível fazer 10 folds
-            if (len(dadosy) < 10 or len(dadosy2) < 10):
-                print(Valor, " não tem 10 pontos em cada reta")
-                continue
-
             # unscale dos dados
             dados, dados2, dadosy, dadosy2 = Tratamento_dados(
                 dados, dados2, dadosy, dadosy2, scalerx, scalery)
@@ -108,17 +103,15 @@ if __name__ == '__main__':
                 saveyfinal = dadosy
                 save2final = dados2
                 savey2final = dadosy2
-        if (len(dadosy) < 10 or len(dadosy2) < 10):
-            continue
         dados = savefinal
         dadosy = saveyfinal
         dados2 = save2final
         dadosy2 = savey2final
-        print("\n----------------------------------------------------\nA guardar apenas uma vez os dados!!!!\n")
+        """ print("\n----------------------------------------------------\nA guardar apenas uma vez os dados!!!!\n")
         np.save("Projeto1_Parte2/Dados/X_train_alpha_regression2.npy", dados)
         np.save("Projeto1_Parte2/Dados/X2_train_alpha_regression2.npy", dados2)
         np.save("Projeto1_Parte2/Dados/y_train_alpha_regression2.npy", dadosy)
-        np.save("Projeto1_Parte2/Dados/y2_train_alpha_regression2.npy", dadosy2)
+        np.save("Projeto1_Parte2/Dados/y2_train_alpha_regression2.npy", dadosy2) """
         SSE_final = Best_Line[0]/(media*kf.get_n_splits())
         Graficox = np.append(Graficox, Valor)
         Graficoy = np.append(Graficoy, SSE_final)
