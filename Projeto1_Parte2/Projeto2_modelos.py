@@ -44,7 +44,7 @@ print(x2.shape)
 finalLinearM1.fit(x1,y1)
 yFinal1 = finalLinearM1.predict(xFinal)
 finalLinearM2.fit(x2, y2)
-yFinal2 = finalLinearM1.predict(xFinal)
+yFinal2 = finalLinearM2.predict(xFinal)
         
 yFinal = np.hstack((yFinal1,yFinal2))
 np.save("Projeto1_Parte2/Dados/Y_final.npy",yFinal)
