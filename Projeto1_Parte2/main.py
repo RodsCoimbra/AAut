@@ -51,7 +51,7 @@ if __name__ == '__main__':
     SSE_Min = np.full([2], 10000000000)
     Graficox = []
     Graficoy = []
-    for Valor in np.arange(0.01, 5, 2):
+    for Valor in np.arange(0.01, 1, 0.01):
         Indx = RANSAC(x_scaler, y_scaler, Valor)
         # Caso em que um deles tem menos que 10 pontos, logo não é possível fazer 10 folds
         if (Indx[0, 0] < 10 or Indx[0, 0] > 90):

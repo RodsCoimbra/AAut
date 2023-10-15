@@ -4,21 +4,21 @@ from sklearn import linear_model
 from sklearn.model_selection import KFold
 
 # Load das coisas
-""" x = np.load("Projeto1_Parte1/Dados_enunciado/X_train_regression1.npy")
-y = np.load("Projeto1_Parte1/Dados_enunciado/y_train_regression1.npy") """
-x = np.load("Projeto1_Parte2/Dados/X2_train_alpha_regression2.npy")
-y = np.load("Projeto1_Parte2/Dados/y2_train_alpha_regression2.npy")
+x = np.load("Dados_enunciado/X_train_regression1.npy")
+y = np.load("Dados_enunciado/y_train_regression1.npy")
+# x = np.load("Projeto1_Parte2/Dados/X2_train_alpha_regression2.npy")
+# y = np.load("Projeto1_Parte2/Dados/y2_train_alpha_regression2.npy")
 rand = np.random.randint(0, 100000)
 # Para o cross Validation
-kf = KFold(n_splits=10, shuffle=True, random_state=rand)
+kf = KFold(n_splits=5, shuffle=True, random_state=rand)
 SSE_Ridge = 0
 SSE_Linear = 0
 SSE_Lasso = 0
 
 # Variáveis a definir
-step = 0.005
-max_lasso = 3
-max_ridge = 4
+step = 0.001
+max_lasso = 5
+max_ridge = 5
 prints = False
 Load_dados = False
 save_dados = False
@@ -75,7 +75,6 @@ if (Load_dados == False):
 else:
     SSE_mean = np.load("Projeto1/SSE_lasso.npy")
     alphas = np.load("Projeto1/alphas_lasso.npy")
-
 plt.plot(alphas, SSE_mean)
 print("Valor de SSE mais baixo do Lasso:", SSE_mean.min())
 print("Para este valor de alpha:", alphas[SSE_mean.argmin()])
