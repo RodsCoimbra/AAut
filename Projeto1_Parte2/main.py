@@ -40,8 +40,8 @@ def Tratamento_dados(save, save2, savey, savey2, scalex, scaley):
 
 
 if __name__ == '__main__':
-    x = np.load("Projeto1_Parte2/Dados/X_train_regression2.npy")
-    y = np.load("Projeto1_Parte2/Dados/y_train_regression2.npy")
+    x = np.load("Dados/X_train_regression2.npy")
+    y = np.load("Dados/y_train_regression2.npy")
 
     # Normalizar os dados
     scalerx = StandardScaler().fit(x)
@@ -69,7 +69,7 @@ if __name__ == '__main__':
                        [y_scaler[resultados[1]], y_scaler[resultados[2]]])
             y_previsto = linear.predict(x_scaler)
             for idx, [y_prev, y_real] in enumerate(zip(y_previsto, y_scaler)):
-                if (abs(y_prev - y_real) < Valor):
+                if (abs(y_prev - y_real) <= Valor):
                     dados = np.append(dados, x_scaler[idx])
                     dadosy = np.append(dadosy, y_real)
                 else:
@@ -95,7 +95,7 @@ if __name__ == '__main__':
                     y_prever2 = reg2.predict(x)
                     SSE = np.where((y - y_prever1)**2 > (y-y_prever2)**2,
                                    (y-y_prever2)**2, (y - y_prever1)**2)  # Guardar o melhor SE para cada ponto
-                    SSE_final += SSE.sum()
+                    SSE_final += SSE.sum()/SSE.size
             if (Best_Line[0] > SSE_final):
                 Best_Line = [SSE_final, resultados[0],
                              resultados[1], resultados[2]]
@@ -124,4 +124,7 @@ if __name__ == '__main__':
     print("\n\n\nO final de todos foi: ",
           SSE_Min[0], " para o valor de ", round(SSE_Min[1], 4))
     plt.plot(Graficox, Graficoy)
+    plt.xlabel("Valor do inliers_range")
+    plt.ylabel("MSE")
+    plt.title("MSE em função do inliers_range")
     plt.show()

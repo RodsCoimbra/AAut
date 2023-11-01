@@ -10,7 +10,7 @@ y = np.load("Dados_enunciado/y_train_regression1.npy")
 # y = np.load("Projeto1_Parte2/Dados/y2_train_alpha_regression2.npy")
 rand = np.random.randint(0, 100000)
 # Para o cross Validation
-kf = KFold(n_splits=5, shuffle=True, random_state=rand)
+kf = KFold(n_splits=15, shuffle=True, random_state=rand)
 SSE_Ridge = 0
 SSE_Linear = 0
 SSE_Lasso = 0
@@ -29,7 +29,7 @@ alphas = np.array([])
 
 # Ridge
 if (Load_dados == False):
-    for j in np.arange(step, max_ridge, step):
+    for j in np.arange(0.01, max_ridge, step):
         ridge = linear_model.Ridge(alpha=j)
         SSE_Ridge = 0
         for idx_train, idx_teste in kf.split(x):
@@ -52,12 +52,12 @@ print("Valor de SSE mais baixo do Ridge:", SSE_mean.min())
 print("Para este valor de alpha:", alphas[SSE_mean.argmin()])
 print()
 plt.legend("Ridge")
-
+plt.scatter(alphas[SSE_mean.argmin()],  SSE_mean.min(), color='red')
 SSE_mean = np.array([])
 alphas = np.array([])
 # Lasso
 if (Load_dados == False):
-    for j in np.arange(step, max_lasso, step):
+    for j in np.arange(0.01, max_lasso, step):
         lasso = linear_model.Lasso(alpha=j)
         SSE_Lasso = 0
         for idx_train, idx_teste in kf.split(x):
@@ -78,10 +78,12 @@ else:
 plt.plot(alphas, SSE_mean)
 print("Valor de SSE mais baixo do Lasso:", SSE_mean.min())
 print("Para este valor de alpha:", alphas[SSE_mean.argmin()])
+plt.scatter(alphas[SSE_mean.argmin()], SSE_mean.min(), color='green')
 print()
+plt.title(f'CV = {kf.get_n_splits()}')
 plt.xlabel("Alpha")
 plt.ylabel("MSE")
-plt.legend(["Ridge", "Lasso"])
+plt.legend(["Ridge", "Min Ridge", "Lasso", "Min Lasso"])
 plt.show()
 
 # Linear
@@ -91,5 +93,5 @@ for idx_train, idx_teste in kf.split(x):
     y_prever1 = reg.predict(x[idx_teste])
     SSE_Linear += np.linalg.norm(y[idx_teste]-y_prever1)**2/(idx_teste.size)
     if (prints == True):
-        print("Linear: ", np.linalg.norm(y[idx_teste]-y_prever1)**2)
+        print("Linear: ", np.linalg.norm(y[idx_teste]-y_prever1)**2)/(idx_teste.size)
 print("Média Linear: ", SSE_Linear/kf.get_n_splits())
